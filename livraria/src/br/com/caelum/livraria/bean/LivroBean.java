@@ -24,6 +24,8 @@ public class LivroBean implements Serializable {
 
 	private Integer autorId;
 
+	private List<Livro> livros;
+
 	public void setAutorId(Integer autorId) {
 		this.autorId = autorId;
 	}
@@ -37,7 +39,11 @@ public class LivroBean implements Serializable {
 	}
 
 	public List<Livro> getLivros() {
-		return new DAO<Livro>(Livro.class).listaTodos();
+		DAO<Livro> dao = new DAO<Livro>(Livro.class);
+		if(this.livros == null) {
+			this.livros = dao.listaTodos();
+		}
+		return livros;
 	}
 
 	public List<Autor> getAutores() {
@@ -67,10 +73,12 @@ public class LivroBean implements Serializable {
 			return;
 		}
 
+		DAO<Livro> dao = new DAO<Livro>(Livro.class);
 		if(this.livro.getId() == null) {
-			new DAO<Livro>(Livro.class).adiciona(this.livro);
+			dao.adiciona(this.livro);
+			this.livros = dao.listaTodos();
 		} else {
-			new DAO<Livro>(Livro.class).atualiza(this.livro);
+			dao.atualiza(this.livro);
 		}
 
 		this.livro = new Livro();
@@ -91,7 +99,7 @@ public class LivroBean implements Serializable {
 	}
 	
 	public String formAutor() {
-		System.out.println("Chamanda do formul√°rio do Autor.");
+		System.out.println("Chamanda do formul·rio do Autor.");
 		return "autor?faces-redirect=true";
 	}
 
@@ -101,7 +109,7 @@ public class LivroBean implements Serializable {
 		String valor = value.toString();
 		if (!valor.startsWith("1")) {
 			throw new ValidatorException(new FacesMessage(
-					"ISBN deveria come√ßar com 1"));
+					"ISBN deveria comeÁar com 1"));
 		}
 
 	}
